@@ -1,0 +1,38 @@
+meta {
+  name: getRdcStatorPing
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/RdcStator/Ping
+  body: none
+  auth: none
+}
+
+docs {
+  # Description
+  
+  Send ping to stator. You can use thes request to check if the stator is online or not. If you want to check the state of the rotor use the `getRdcStatorRotorState` request instead.
+  
+  ## Required service level
+  
+  `none`
+  
+  ## Values
+  
+  `none`
+  
+  # Body
+  
+  `none`
+  
+  # Response
+  
+  `200 OK`
+  
+  or
+  
+  timeout
+  
+}

@@ -1,0 +1,9 @@
+{
+    "dotnet.defaultSolution": "WebSockets.sln",
+    "markdownlint.config": {
+        "default": true,
+        "MD033": false,
+        "MD013": false,
+        "no-hard-tabs": false
+    }
+}

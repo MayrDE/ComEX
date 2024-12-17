@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ROBA-drive-checker</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>
+
+        let hostname = "rdc-2419d00108";
+        let loggerType = "DataLogger";
+        let transmitRate = 50;
+        let lines = [];
+        var webSocket = undefined;
+
+        initialize = () => {
+            document.getElementById("hostname").value = hostname;
+            document.getElementById("loggerType").value = loggerType;
+            document.getElementById("transmitRate").value = transmitRate;
+        }
+
+        connect = () => {
+            if (webSocket != undefined) {
+                webSocket.close();
+                webSocket = undefined;
+                document.getElementById("connectButton").innerHTML = "Connect";
+                return;
+            }
+
+            let host = document.getElementById("hostname").value;
+            let logType = document.getElementById("loggerType").value;
+
+            webSocket = new WebSocket('ws://' + host + ':81/' + logType);
+            webSocket.binaryType = "arraybuffer";
+            webSocket.addEventListener('open', (e) => _onOpen(e));
+            webSocket.addEventListener('close', (e) => _onClose(e));
+            webSocket.addEventListener('error', (e) => _onError(e));
+            webSocket.addEventListener('message', (e) => _onMessage(e));
+
+            document.getElementById("connectButton").innerHTML = "Disconnect";
+        }
+
+        _onOpen = (event) => {
+            let data = event.data;
+            console.log(data);
+
+            let date1 = new Date();
+            // time zone offset is in minutes but we need them in milliseconds
+            data = '{TimeUTC:"' + (Date.now() + (date1.getTimezoneOffset() * 1000 * 60)) + '"}';
+            this.webSocket.send(data);
+
+            let transmitRate = document.getElementById("transmitRate").value;
+            data = '{TransmitRate:"' + transmitRate + '"}';
+            this.webSocket.send(data);
+        }
+        _onClose = (event) => {
+            let data = event.data;
+            console.log(data);
+        }
+        _onError = (event) => {
+            let data = event.data;
+            console.error('Connection error: ' + data);
+        }
+        _onMessage = (event) => {
+            let data = "";
+
+            if (event.data instanceof (ArrayBuffer)) {
+                // get data from stream
+                if (loggerType != "RawDataLogger")
+                    data = new TextDecoder().decode(event.data);
+                else {
+                    data = event.data
+                }
+            }
+            else {
+                data = event.data
+            }
+            // add it to our array
+            lines.push(data);
+
+            // limit lines to 5
+            while (lines.length > 5)
+                lines.shift();
+
+            // build our final output
+            let content = "";
+            for (var i = 0; i < lines.length; i++)
+                content += '<p>' + lines[i] + "</p>";
+
+            document.getElementById("message").innerHTML = content;
+        }
+    </script>
+
+</head>
+
+<body onload="initialize()">
+    <div style="display: grid; grid-template-columns: 200px 300px;">
+        <label for="hostname">Hostname: </label>
+        <input id="hostname" type="text" value="">
+
+        <label for="loggerType">Logger type: </label>
+        <input id="loggerType" type="text" value="">
+
+        <label for="transmitRate">Transmit rate: </label>
+        <input id="transmitRate" type="text" value="">
+
+        <button id="connectButton" onclick="connect()">Connect</button>
+    </div>
+
+    <div id="message">
+        <p>No data yet :(</p>
+    </div>
+</body>
+
+</html>

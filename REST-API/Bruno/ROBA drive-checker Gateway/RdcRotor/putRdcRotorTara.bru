@@ -1,0 +1,67 @@
+meta {
+  name: putRdcRotorTara
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/RdcRotor/Tara
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Value": 1
+  }
+}
+
+docs {
+  # putRdcRotorTara
+  
+  Set RDC Rotor tara.
+  
+  Please note:
+  
+  - This command is only available if rotor is ***not*** in `run mode`
+  - ***This is a temporary functionality. A rotor restart will reset this value***
+  
+  ## Required service level
+  
+  `Customer`
+  
+  ## Values
+  
+  `Value`
+  
+  Actually we accept values between 50ms and 1000ms in 50ms steps. Values below 50 will be limited. All values between e.g. 50ms and 100ms will be fixed to 50ms, values between 100ms and 150ms will be fixed to 100ms etc.
+  
+  - type: integer
+  - format: uint8
+  - minimum: 0
+  - maximum: 1
+  - possible values
+    - 0 = Off
+    - 1 = On
+  
+  ## Body
+  
+  ```json
+  {
+    "Value": 1
+  }
+  ```
+  
+  ## Response
+  
+  `202 Accepted`
+  
+  Please use the `getRdcStatorCommandResult` function to check if the command has been executed successfully. Please check out the `getRdcStatorCommandResult` documentation for details.
+  
+  `400 Bad Request` if body parameters wrong
+  
+  `401 Unauthorized` if service level is wrong
+  
+  `503 Service Unavailable` if rotor is not connected to the gateway
+  
+}

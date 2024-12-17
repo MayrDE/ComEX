@@ -1,0 +1,547 @@
+openapi: 3.0.1
+info:
+  title: ROBA drive-checker Gateway
+  description: OpenAPI documentation for ROBA drive-checker Gateway REST communication
+  contact:
+    email: public.mayr@mayr.de
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about mayr
+  url: http://www.mayr.de
+servers:
+  - url: http://192.168.4.1
+  - url: http://192.168.4.2
+tags:
+  - name: RdcRotor
+    description: Roba drive checker rotor
+  - name: RdcStator
+    description: Roba drive checker stator
+paths:
+  /RdcRotor/FilterSelection:
+    get:
+      security: []
+      tags:
+        - RdcRotor
+      description: get active RDC torque filter
+      operationId: getRdcRotorFilterSelection
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RdcRotorFilterSelection"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcRotor
+      description: put active RDC torque filter
+      operationId: putRdcRotorFilterSelection
+      requestBody:
+        description: Filter to select
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RdcRotorFilterSelection"
+        required: true
+      responses:
+        "202":
+          $ref: "#/components/responses/RequestAccepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /RdcRotor/Id:
+    get:
+      security: []
+      tags:
+        - RdcRotor
+      description: get RDC Rotor Id's
+      operationId: getRdcRotorId
+      responses:
+        "200":
+          $ref: "#/components/responses/RdcId"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /RdcRotor/ProcessData:
+    get:
+      security: []
+      tags:
+        - RdcRotor
+      description: Get actual RDC process data like torque, speed, etc.
+      operationId: getRdcRotorProcessData
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RdcRotorProcessData"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /RdcRotor/Reset:
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcRotor
+      description: RDC Rotor Reset command
+      operationId: putRdcRotorReset
+      requestBody:
+        description: reset selected item
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RdcRotorResetSelection"
+        required: true
+      responses:
+        "202":
+          $ref: "#/components/responses/RequestAccepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /RdcRotor/Tara:
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcRotor
+      description: PUT RDC Rotor tara
+      operationId: putRdcRotorTara
+      requestBody:
+        $ref: "#/components/requestBodies/RdcOnOff"
+      responses:
+        "202":
+          $ref: "#/components/responses/RequestAccepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /RdcRotor/TransmitRate:
+    get:
+      security: []
+      tags:
+        - RdcRotor
+      description: Get actual RDC transmit rate
+      operationId: getRdcRotorTransmitRate
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RdcRotorTransmitRate"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcRotor
+      description: Update actual RDC transmit rate
+      operationId: putRdcRotorTransmitRate
+      requestBody:
+        description: Set new RDC transmit rate
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RdcRotorTransmitRate"
+        required: true
+      responses:
+        "202":
+          $ref: "#/components/responses/RequestAccepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /RdcRotor/Version:
+    get:
+      security: []
+      tags:
+        - RdcRotor
+      description: get RDC Rotor HW/SW Versions
+      operationId: getRdcRotorVersion
+      responses:
+        "200":
+          $ref: "#/components/responses/RdcVersion"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  
+  /RdcStator/AnalogRange:
+    get:
+      security: []
+      tags:
+        - RdcStator
+      description: Get RDC Stator analog output range configuration
+      operationId: getRdcStatorAnalogRange
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RdcStatorAnalogRange"
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcStator
+      description: Set RDC Stator analog output range configuration
+      operationId: putRdcStatorAnalogRange
+      requestBody:
+        description: RDC Stator analog output value
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RdcStatorAnalogRange"
+        required: true
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /RdcStator/CommandResult:
+    description: This request can be used to get the result of the last rotor command request.
+    get:
+      security: []
+      tags:
+        - RdcStator
+      description: Get last RDC Rotor command result
+      operationId: getRdcStatorCommandResult
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RdcStatorCommandResult"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /RdcStator/Id:
+    get:
+      security: []
+      tags:
+        - RdcStator
+      description: get RDC Stator id's
+      operationId: getRdcStatorId
+      responses:
+        "200":
+          $ref: "#/components/responses/RdcId"
+
+  /RdcStator/Pairing:
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcStator
+      description: Start RDC Stator Pairing (can't be stopped)
+      operationId: putRdcStatorPairing
+      responses:
+        "202":
+          $ref: "#/components/responses/RequestAccepted"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+
+  /RdcStator/Ping:
+    get:
+      security: []
+      tags:
+        - RdcStator
+      description: Send ping to stator
+      operationId: getRdcStatorPing
+      responses:
+        "200":
+         description: Pong
+
+  /RdcStator/Reset:
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcStator
+      description: Reset/Restart RDC Stator
+      operationId: putRdcStatorReset
+      responses:
+        "202":
+          $ref: "#/components/responses/RequestAccepted"
+
+  /RdcStator/RotorState:
+    get:
+      security: []
+      tags:
+        - RdcStator
+      description: Get RDC Stator rotor status
+      operationId: getRdcStatorRotorState
+      responses:
+        "200":
+          $ref: "#/components/responses/RdcRotorState"
+
+  /RdcStator/RunMode:
+    get:
+      security: []
+      tags:
+        - RdcStator
+      description: Get RDC Stator run mode status
+      operationId: getRdcStatorRunMode
+      responses:
+        "200":
+          $ref: "#/components/responses/RdcOnOff"
+    put:
+      security:
+        - basicAuth: []
+      tags:
+        - RdcStator
+      description: Toggle RDC Stator run mode
+      operationId: putRdcStatorRunMode
+      responses:
+        "202":
+          $ref: "#/components/responses/RequestAccepted"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /RdcStator/Version:
+    get:
+      security: []
+      tags:
+        - RdcStator
+      description: get RDC Stator HW/SW versions
+      operationId: getRdcStatorVersion
+      responses:
+        "200":
+          $ref: "#/components/responses/RdcVersion"
+
+components:
+  responses:
+    RdcOnOff:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RdcOnOff"
+    RdcId:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RdcId"
+    RdcVersion:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RdcVersion"
+    RequestAccepted:
+      description: 202 Command request accepted. Please check RdcStatorCommandResult to get the result of the last command request.
+    NoContent:
+      description: 204 Command execution successful
+    BadRequest:
+      description: 400 bad request
+    TooManyRequests:
+      description: 429 too many requests
+    ServiceUnavailable:
+      description: 503 Returns the reason why the rotor is not available
+      content:
+        text/plain:
+          schema:
+            type: string
+    RdcRotorState:
+      description: 200 OK
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RdcRotorState"
+
+  requestBodies:
+    RdcOnOff:
+      description: Get or set a value to on or off
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RdcOnOff"
+
+  schemas:
+    RdcOnOff:
+      type: object
+      description: Turn a setting or value off or on
+      properties:
+        Value:
+          type: integer
+          format: uint8
+          description: 0 = Off, 1 = On
+          minimum: 0
+          maximum: 1
+          x-nullable: true
+
+    RdcStatorCommandResult:
+      type: object
+      description: Get the last rotor command result. Use this object to check the result of every rotor command.
+      properties:
+        Value:
+          type: integer
+          format: int8
+          description: -1 = NONE (no result yet), 0 = NACK, 1 = ACK, 2 = FIN, 3 = ERR, 4 = BUSY (already working on a request)
+          minimum: -1
+          maximum: 4
+          x-nullable: true
+
+    RdcRotorFilterSelection:
+      type: object
+      description: Get or set the rotor torque filter
+      properties:
+        Value:
+          type: integer
+          format: uint8
+          description: 0 = 1Hz, 1 = 10Hz, 2 = 100Hz, 3 = 200Hz, 4 = 500Hz, 5 = 1000Hz, 6 = 1500Hz
+          minimum: 0
+          maximum: 6
+          x-nullable: true
+
+    RdcId:
+      type: object
+      description: Get or set the item and serial numbers. This requires a special authorization.
+      properties:
+        SerialNumber:
+          type: string
+          description: This is the mayr serial number. Example Q3116991
+          minLength: 7
+          maxLength: 16
+        ItemNumber:
+          type: string
+          description: This is the mayr item number. Example 8298350
+          minLength: 7
+          maxLength: 16
+
+    RdcVersion:
+      type: object
+      description: Get or set the hardware and software versions (software is read only). This requires a special authorization.
+      properties:
+        HwVersion:
+          type: string
+          description: example 0.1.0.0
+          maxLength: 15
+          minLength: 7
+        SwVersion:
+          type: string
+          description: example 1.0.5 please note that this version is read only
+          maxLength: 11
+          minLength: 5
+
+    RdcRotorProcessData:
+      type: object
+      description: Get the actual reading values of the rotor. This object is read only.
+      properties:
+        Torque:
+          type: number
+          format: float
+          description: This is the averaged actual torque value (calculated by the rotor)
+        Speed:
+          type: integer
+          format: int16
+          description: This is the rotor speed in rpm and can be a positive or negative value. The maximum speed depends on the rotor size.
+        Temp:
+          type: number
+          format: float
+          description: This is the rotor cpu temperature
+        Minimum:
+          type: number
+          format: float
+          description: This is the unfiltered minimum torque hold value (spike) from -(max torque) to 0. Can be reset by RdcRotorResetSelection 0x11 Reset Min/Max
+        Maximum:
+          type: number
+          format: float
+          description: This is the unfiltered maximum torque hold value (spike) from 0 to (max torque). Can be reset by RdcRotorResetSelection 0x11 Reset Min/Max
+        Channel:
+          type: integer
+          format: uint8
+          description: This is the actual communication channel of the radio modules on gateway and rotor
+          minimum: 0
+          maximum: 37
+        Voltage:
+          type: number
+          format: float
+          description: This is the induced supply voltage of the rotor
+        Timestamp:
+          type: integer
+          format: int64
+          description: This is the unix timestamp of this message in milliseconds.
+
+    RdcRotorResetSelection:
+      type: object
+      description: Rotor reset command with multiple choices. See Value description for details
+      properties:
+        Value:
+          type: integer
+          format: uint8
+          description: 0x11 = Reset Min/Max, 0xAA = Restart rotor
+          minimum: 0
+          maximum: 255
+          x-nullable: true
+
+    RdcRotorTransmitRate:
+      type: object
+      description: Get or set the rotor transmit rate in milliseconds
+      properties:
+        Value:
+          type: integer
+          format: uint16
+          description: Actually we accept values between 50ms and 1000ms in 50ms steps
+          minimum: 50
+          maximum: 1000
+          multipleOf: 50
+
+    RdcRotorState:
+      type: object
+      description: Get the current rotor state
+      properties:
+        Value:
+          type: integer
+          format: uint8
+          description:  0 = Initialize_RF, 
+                        1 = Initialize_Self, 
+                        2 = Init_Failed, 
+                        3 = NotPaired, 
+                        4 = Pairing, 
+                        5 = PairingFailed, 
+                        6 = NotConnected,
+                        7 = Connected,
+                        8 = RunMode,
+                        9 = RotorUpdate,
+                        10 = RotorUpdateFailed,
+                        11 = Wait4CommandResponse
+          minimum: 0
+          maximum: 11
+          x-nullable: true
+
+    RdcStatorAnalogRange:
+      type: object
+      description: Get or set the gateway analog output range.
+      properties:
+        Value:
+          type: integer
+          format: uint8
+          description: 0 = 0-10V, 1 = 0-20mA
+          minimum: 0
+          maximum: 1
+          default: 1
+          x-nullable: true
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
