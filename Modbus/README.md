@@ -72,6 +72,14 @@ For more information about the Modbus protocol please refer to [the Modbus docum
 
 &uarr; [back to top](#table-of-contents)
 
+## Important information
+
+The current ROBA®-drive-checker address `is fixed to 1`. At the moment of writing this documentation, changing the address is not possible, but this might change in future releases.
+
+The address 0 is not a valid address, because it is reserved for broadcast messages to all stations.
+
+Please refer to [Beckhoff Information System](https://infosys.beckhoff.com/english.php?content=../content/1033/tcplclibmodbusrtu/455279627.html&id=) for details.
+
 ## Gateway registers
 
 ### Gateway Command Registers (coils) FC01 / FC05
