@@ -11,14 +11,14 @@ To get the torque in Nm you need to:
 
 - request the `MaximumTorque` of the current rotor [via REST API request](../REST-API/README.md)
 - or read the calibration torque value from the nameplate of the rotor
-- divide the `MaximumTorque` by `60000` to get the scaling factor (needs to be done only once)
+- divide the `MaximumTorque` by `30000` to get the scaling factor (needs to be done only once)
 - multiply raw Torque by your scaling factor.
 
 Example:
 
 ```c
 double maxTorque = 190; // Nm
-double scalingFactor = maxTorque / 60000.0; // = 0,0031666666666667
+double scalingFactor = maxTorque / 30000.0; // = 0,0063333333333333
 double torqueNm = PayloadFrame.ProcessData.Torque * scalingFactor;
 ```
 
